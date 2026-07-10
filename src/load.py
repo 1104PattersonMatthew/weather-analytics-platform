@@ -1,6 +1,14 @@
 import os
 from pathlib import Path
 
+import warnings
+
+warnings.filterwarnings(
+    "ignore",
+    message="Signature.*numpy.longdouble.*",
+    category=UserWarning
+)
+
 import pandas as pd
 import psycopg2
 from dotenv import load_dotenv

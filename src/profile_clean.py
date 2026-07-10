@@ -1,6 +1,14 @@
 import json
 from pathlib import Path
 
+import warnings
+
+warnings.filterwarnings(
+    "ignore",
+    message="Signature.*numpy.longdouble.*",
+    category=UserWarning
+)
+
 import pandas as pd
 
 
