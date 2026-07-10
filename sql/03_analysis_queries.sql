@@ -12,24 +12,21 @@ GROUP BY
     c.state
 ORDER BY highest_temperature_f DESC;
 
-
--- 2. Total monthly precipitation by city
+-- 2. Frequency of extreme temperature days by city
 
 SELECT
     c.city_name,
     c.state,
-    DATE_TRUNC('month', w.weather_date)::DATE AS month,
-    ROUND(SUM(w.precipitation_in), 3) AS total_precipitation_in
+    COUNT(*) AS total_days,
+    COUNT(*) FILTER (WHERE w.temperature_max_f >= 95) AS extreme_heat_days,
+    COUNT(*) FILTER (WHERE w.temperature_min_f <= 32) AS freezing_days
 FROM weather_records w
 JOIN cities c
     ON w.city_id = c.city_id
 GROUP BY
     c.city_name,
-    c.state,
-    DATE_TRUNC('month', w.weather_date)
-ORDER BY
-    c.city_name,
-    month;
+    c.state
+ORDER BY extreme_heat_days DESC;
 
 
 -- 3. Windiest week of the year per city based on average max daily wind speed
@@ -82,22 +79,23 @@ GROUP BY
     c.state
 ORDER BY total_precipitation_in DESC;
 
-
--- 5. Frequency of extreme temperature days by city
+-- 5. Total monthly precipitation by city
 
 SELECT
     c.city_name,
     c.state,
-    COUNT(*) AS total_days,
-    COUNT(*) FILTER (WHERE w.temperature_max_f >= 95) AS extreme_heat_days,
-    COUNT(*) FILTER (WHERE w.temperature_min_f <= 32) AS freezing_days
+    DATE_TRUNC('month', w.weather_date)::DATE AS month,
+    ROUND(SUM(w.precipitation_in), 3) AS total_precipitation_in
 FROM weather_records w
 JOIN cities c
     ON w.city_id = c.city_id
 GROUP BY
     c.city_name,
-    c.state
-ORDER BY extreme_heat_days DESC;
+    c.state,
+    DATE_TRUNC('month', w.weather_date)
+ORDER BY
+    c.city_name,
+    month;
 
 
 -- 6. Hottest month of the year per city based on average daily max temperature
